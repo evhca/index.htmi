@@ -1,48 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Eva’s Art & Poetry Journal</title>
-<meta name="description" content="A tiny gallery of art, poems, photos, and zines by Eva & friends." />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<style>
-  :root{--bg:#faf9f7;--card:#fff;--ink:#1a1a1a;--muted:#6b6b6b;--pill:#efefef;--accent:#a78bfa;--max:1200px}
-  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Arial,sans-serif}
-  a{color:inherit} header{position:sticky;top:0;background:rgba(250,249,247,.8);backdrop-filter:blur(10px);border-bottom:1px solid #eee;z-index:10}
-  .nav{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.9rem 1rem}
-  .brand{font-weight:800;letter-spacing:.2px}.brand span{background:var(--accent);color:#fff;border-radius:10px;padding:.15rem .4rem;margin-left:.35rem}
-  .actions{display:flex;gap:.5rem;flex-wrap:wrap}
-  .pill{background:var(--pill);border-radius:999px;padding:.45rem .8rem;font-size:.92rem;border:1px solid #e8e8e8;cursor:pointer}
-  .pill.active{background:var(--accent);color:#fff;border-color:transparent}
-  .wrap{max-width:var(--max);margin:1.2rem auto;padding:0 1rem}
-  .intro{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-  .intro p{margin:.2rem 0;color:var(--muted)}
-  .grid{column-count:1;column-gap:1rem;margin-top:1rem}
-  @media(min-width:640px){ .grid{column-count:2} }
-  @media(min-width:980px){ .grid{column-count:3} }
-  .card{break-inside:avoid;border-radius:18px;border:1px solid #eee;background:var(--card);box-shadow:0 8px 24px rgba(0,0,0,.04);margin:0 0 1rem;overflow:hidden}
-  .card img{width:100%;display:block}
-  .pad{padding:1rem}.title{font-weight:700}.by{color:var(--muted);font-size:.92rem}
-  .tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem}
-  .tag{font-size:.8rem;background:#f3f3f3;border:1px solid #eee;border-radius:999px;padding:.2rem .55rem}
-  .poem{font-family:"Playfair Display",Georgia,serif;font-size:1.05rem;line-height:1.7;white-space:pre-wrap}
-  .btn{display:inline-block;margin-top:.6rem;border:1px solid #e7e7e7;border-radius:12px;padding:.45rem .7rem;background:#fff}
-  footer{color:var(--muted);text-align:center;padding:2rem 1rem}
-  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:50}
-  .modal.open{display:flex}
-  .modal-box{max-width:min(900px,90vw);max-height:85vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;border-bottom:1px solid #eee}
-  .close{border:none;background:#f3f3f3;border-radius:10px;padding:.35rem .6rem;cursor:pointer}
-  .modal-body img{width:100%;height:auto;display:block}
-  .modal-body{padding:1rem}
-</style>
-</head>
-<body>
-<header>
-  <div class="nav">
-    <div class="brand">Eva’s Journal <span>CAS</span></div>
-    <div class="actions" id="filters">
-      <button class="pill active" data-filter="all">All</button>
-      <button class="pill" data-filter="art">Art</button>
-      <button class="pill" data-filter="poem">Poems</button>
+<div class="actions">
+<button class="btn primary read-poem" data-title="bow on a breezy day" data-text="today my hair forgets to stay\nso i let the wind dress me.\na ribbon learns my name\nand ties the hours together.\n\nwe write our plans in pencil\nso the clouds can edit.\nwhen the sun blushes pink,\ni promise to show up\nfor the gentle things.">Read poem</button>
+<button class="btn copy-link">Copy link</button>
+</div>
+</div>
+</article>
+
+</section>
+
+<footer>
+<small>© <span id="y"></span> Eva Tsyura & Kiara Rychen · made with ♡ for CAS</small>
+</footer>
+</main>
+
+<!-- Modal for images & poems -->
+<div class="modal" id="modal" aria-hidden="true" role="dialog" aria-label="Preview">
+<div class="modal-box">
+<div class="modal-head">
+<strong id="modalTitle">Preview</strong>
+<button class="close" id="close">Close</button>
+</div>
+<div class="modal-body" id="modalBody"></div>
+</div>
+</div>
+
+<button class="to-top" id="toTop" title="Back to top">↑</button>
+
+<script>
+// Year
+document.getElementById('y').textContent = new Date().getFullYear();
+
+// Modal controls
+const modal = document.getElementById('modal');
+const modalBody = document.getElementById('modalBody');
+const modalTitle = document.getElementById('modalTitle');
+const openImage = (src)=>{ modalTitle.textContent='Artwork'; modalBody.innerHTML = `<img src="${src}" alt="">`; modal.classList.add('open'); };
+const openPoem = (title, text)=>{ modalTitle.textContent = title; modalBody.innerHTML = `<div class="poem" style="font-family: 'Playfair Display', Georgia, serif; font-size:1.1rem; line-height:1.8; white-space:pre-wrap">${text}</div>`; modal.classList.add('open'); };
+document.getElementById('close').onclick = ()=> modal.classList.remove('open');
+modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('open'); });
+
+// Bind buttons
+document.querySelectorAll('.view-image').forEach(btn=>{
+btn.addEventListener('click', ()=> openImage(btn.dataset.src));
+});
+document.querySelectorAll('.read-poem').forEach(btn=>{
+btn.addEventListener('click', ()=> openPoem(btn.dataset.title, btn.dataset.text));
+});
+
+// Copy-permalink (dummy: copies current page + anchor by title)
+document.querySelectorAll('.copy-link').forEach((btn)=>{
+btn.addEventListener('click', ()=>{
+const card = btn.closest('.card');
+const title = card.querySelector('.title')?.textContent?.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-') || '';
+const url = `${location.origin}${location.pathname}#${title}`;
+navigator.clipboard.writeText(url).then(()=>{
+btn.textContent = 'Copied ✓'; setTimeout(()=> btn.textContent='Copy link', 1200);
+});
+});
+});
+
+// Back to top
+const toTop = document.getElementById('toTop');
+toTop.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+window.addEventListener('scroll', ()=>{
+toTop.style.display = window.scrollY > 500 ? 'block' : 'none';
+});
+</script>
+</body>
+</html>
